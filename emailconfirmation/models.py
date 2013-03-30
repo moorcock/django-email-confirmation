@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.utils.hashcompat import sha_constructor
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from emailconfirmation.signals import email_confirmed
 from emailconfirmation.utils import get_send_mail
@@ -137,7 +138,7 @@ class EmailConfirmation(models.Model):
     def key_expired(self):
         expiration_date = self.sent + timedelta(
             days=settings.EMAIL_CONFIRMATION_DAYS)
-        return expiration_date <= datetime.now()
+        return expiration_date <= timezone.localtime(timezone.now())
     key_expired.boolean = True
 
     def __unicode__(self):
